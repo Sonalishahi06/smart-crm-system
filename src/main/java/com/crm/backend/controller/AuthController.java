@@ -1,6 +1,7 @@
 package com.crm.backend.controller;
 
 import com.crm.backend.dto.LoginRequest;
+import com.crm.backend.dto.RegisterRequest;
 import com.crm.backend.entity.User;
 import com.crm.backend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +15,8 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/register")
-    public User registerUSer(@RequestBody User user){
-        return  userService.registerUser(user);
+    public User registerUser(@RequestBody RegisterRequest request){
+        return userService.registerUser(request);
     }
 
     @PostMapping("/login")
