@@ -1,5 +1,6 @@
 package com.crm.backend.service;
 
+import com.crm.backend.config.JwtUtil;
 import com.crm.backend.dto.RegisterRequest;
 import com.crm.backend.entity.User;
 import com.crm.backend.repository.UserRepository;
@@ -15,6 +16,9 @@ public class UserService {
 
   @Autowired
   private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public User registerUser(RegisterRequest request){
         User user=new User();
@@ -33,6 +37,7 @@ public class UserService {
         if(!passwordEncoder.matches(password,user.getPassword())){
             return "Invalid password";
         }
-        return "Login successful";
+        String token = jwtUtil.generateToken(user.getEmail());
+        return token;
     }
 }
