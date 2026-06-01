@@ -21,11 +21,15 @@ public class UserService {
     private JwtUtil jwtUtil;
 
     public User registerUser(RegisterRequest request){
+        if(userRepository.findByEmail(request.getEmail()) != null){
+
+            throw new RuntimeException("Email already exists");
+        }
         User user=new User();
         user.setName(request.getName());
         user.setEmail(request.getEmail());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setRole(request.getRole());
+        user.setRole("USER");
         return userRepository.save(user);
     }
 

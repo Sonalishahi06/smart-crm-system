@@ -1,10 +1,15 @@
 package com.crm.backend.service;
 
 import com.crm.backend.entity.Customer;
+import com.crm.backend.entity.User;
 import com.crm.backend.repository.CustomerRepository;
+import com.crm.backend.repository.UserRepository;
+import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import javax.naming.AuthenticationNotSupportedException;
 import java.util.List;
 
 @Service
@@ -12,11 +17,24 @@ public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public Customer createCustomer(Customer customer){
+        Authentication auth= SecurityContextHolder.getContext().getAuthentication();
+        String email=auth.getName();
+        User user=userRepository.findByEmail(email);
+        customer.setCreatedBy(user.getId());
         return customerRepository.save(customer);
     }
     public List<Customer> getAllCustomers(){
-        return customerRepository.findAll();
+        Authentication auth =
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String email = auth.getName();
+
+        User user = userRepository.findByEmail(email);
+        return customerRepository.findByCreatedBy(user.getId());
     }
 
     public void deleteCustomer(Long id){
