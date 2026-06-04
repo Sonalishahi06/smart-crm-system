@@ -1,14 +1,14 @@
-# 🚀 Smart CRM System
+🚀 Smart CRM System
 
-A secure Customer Relationship Management (CRM) backend application built using Spring Boot, Spring Security, JWT Authentication, and MySQL.
+A secure Customer Relationship Management (CRM) backend application built using Spring Boot, Spring Security, JWT Authentication, Role-Based Authorization, and MySQL.
 
-## 📌 Project Overview
+📌 Project Overview
 
-Smart CRM System helps businesses manage customer data securely through RESTful APIs. The project follows a layered architecture and industry-standard backend development practices.
+Smart CRM System helps businesses manage customer data securely through RESTful APIs. The project follows a layered architecture and implements authentication, authorization, and user-specific data access similar to real-world CRM applications.
 
-## 🛠️ Tech Stack
+🛠️ Tech Stack
 
-### Backend
+Backend
 
 * Java 21
 * Spring Boot
@@ -18,35 +18,43 @@ Smart CRM System helps businesses manage customer data securely through RESTful 
 * Hibernate
 * Maven
 
-### Database
+Database
 
 * MySQL
 
-### Tools
+Tools
 
 * Git & GitHub
 * Postman
 * IntelliJ IDEA
 
-## ✨ Features
+✨ Features
 
-### Authentication & Security
+🔐 Authentication & Security
 
 * User Registration
 * User Login
-* Password Encryption (BCrypt)
+* BCrypt Password Encryption
 * JWT Token Generation
 * JWT-Based Authentication
 * Protected API Endpoints
 
-### Customer Management
+👥 Customer Management
 
 * Create Customer
 * View Customer Details
 * Update Customer Information
 * Delete Customer
 
-### Backend Architecture
+🛡️ Authorization & Access Control
+
+* Role-Based Authorization (ADMIN / USER)
+* Admin Protected Endpoints
+* User-Specific Customer Access
+* Admin Can View All Customers
+* 403 Forbidden for Unauthorized Access
+
+🏗️ Backend Architecture
 
 * RESTful APIs
 * DTO-Based Design
@@ -57,7 +65,7 @@ Smart CRM System helps businesses manage customer data securely through RESTful 
   * Repository
 * Clean Code Structure
 
-## 📂 Project Structure
+📂 Project Structure
 
 src
 ├── controller
@@ -65,39 +73,43 @@ src
 ├── repository
 ├── dto
 ├── entity
+├── config
 ├── security
-|── config
 
-## ▶️ How to Run
+▶️ How to Run
 
-### 1. Clone Repository
+1. Clone Repository
 
 git clone <repository-url>
 
-### 2. Configure MySQL
+2. Configure MySQL
 
 Update application.properties with your database credentials.
 
-### 3. Run Application
+3. Run Application
 
 mvn spring-boot:run
 
-### 4. Test APIs
+4. Test APIs
 
-Use Postman to test Authentication and Customer APIs.
+Use Postman to test Authentication, Authorization, and Customer APIs.
 
-## 🚀 Future Enhancements
+🚀 Future Enhancements
 
+* Global Exception Handling
+* Request Validation
+* Swagger/OpenAPI Documentation
 * React.js Frontend
-* Role-Based Access Control (RBAC)
 * Customer Dashboard
 * Docker Deployment
 * AWS Deployment
 
-## 👩‍💻 Author
+👩‍💻 Author
 
 Sonali Kumari Shahi
-Java Full-Stack Developer | Spring Boot | MySQL | REST APIs
+
+Java Full-Stack Developer | Spring Boot | Spring Security | JWT | MySQL | REST APIs
+
 
 
 
