@@ -34,6 +34,9 @@ public class CustomerService {
         String email = auth.getName();
 
         User user = userRepository.findByEmail(email);
+        if("ADMIN".equals(user.getRole())){
+            return customerRepository.findAll();
+        }
         return customerRepository.findByCreatedBy(user.getId());
     }
 
