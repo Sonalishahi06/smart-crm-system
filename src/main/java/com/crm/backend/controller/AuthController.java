@@ -4,6 +4,7 @@ import com.crm.backend.dto.LoginRequest;
 import com.crm.backend.dto.RegisterRequest;
 import com.crm.backend.entity.User;
 import com.crm.backend.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,7 +16,7 @@ public class AuthController {
     private UserService userService;
 
     @PostMapping("/register")
-    public User registerUser(@RequestBody RegisterRequest request){
+    public User registerUser(@Valid @RequestBody RegisterRequest request){
         return userService.registerUser(request);
     }
 

@@ -3,6 +3,7 @@ package com.crm.backend.service;
 import com.crm.backend.config.JwtUtil;
 import com.crm.backend.dto.RegisterRequest;
 import com.crm.backend.entity.User;
+import com.crm.backend.exception.EmailAlreadyExistsException;
 import com.crm.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +24,7 @@ public class UserService {
     public User registerUser(RegisterRequest request){
         if(userRepository.findByEmail(request.getEmail()) != null){
 
-            throw new RuntimeException("Email already exists");
+            throw new EmailAlreadyExistsException("Email already exists");
         }
         User user=new User();
         user.setName(request.getName());
