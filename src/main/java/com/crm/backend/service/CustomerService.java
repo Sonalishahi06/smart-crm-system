@@ -4,6 +4,9 @@ import com.crm.backend.entity.Customer;
 import com.crm.backend.entity.User;
 import com.crm.backend.repository.CustomerRepository;
 import com.crm.backend.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -27,18 +30,47 @@ public class CustomerService {
         customer.setCreatedBy(user.getId());
         return customerRepository.save(customer);
     }
-    public List<Customer> getAllCustomers(){
+
+
+    public Page<Customer> getAllCustomers(int page, int size){
         Authentication auth =
                 SecurityContextHolder.getContext().getAuthentication();
 
         String email = auth.getName();
 
         User user = userRepository.findByEmail(email);
+        Pageable pageable= PageRequest.of(page, size);
         if("ADMIN".equals(user.getRole())){
-            return customerRepository.findAll();
+            return customerRepository.findAll(pageable);
         }
-        return customerRepository.findByCreatedBy(user.getId());
+        return customerRepository.findByCreatedBy(user.getId(),pageable);
     }
+
+    public List<Customer> searchCustomers(String name){
+        Authentication auth=
+                SecurityContextHolder.getContext().getAuthentication();
+
+        String email=auth.getName();
+        User user=userRepository.findByEmail(email);
+        if("ADMIN".equals((user.getRole()))){
+            return customerRepository.findByNameContainingIgnoreCase(name);
+        }
+        return customerRepository.findByNameContainingIgnoreCase(name).
+                stream()
+                .filter(customer -> customer.getCreatedBy().equals(user.getId()))
+                .toList();
+    }
+
+    public List<Customer> filterCustomerByStatus(Customer.Status status){
+        Authentication auth=SecurityContextHolder.getContext().getAuthentication();
+        String email= auth.getName();
+        User user =userRepository.findByEmail(email);
+        if("ADMIN".equals(user.getRole())){
+            return customerRepository.findByStatus(status);
+        }
+        return customerRepository.findByCreatedByAndStatus(user.getId(),status);
+    }
+
 
     public void deleteCustomer(Long id){
         customerRepository.deleteById(id);
