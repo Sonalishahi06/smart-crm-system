@@ -4,6 +4,9 @@ import com.crm.backend.config.JwtUtil;
 import com.crm.backend.dto.RegisterRequest;
 import com.crm.backend.entity.User;
 import com.crm.backend.exception.EmailAlreadyExistsException;
+import com.crm.backend.exception.InvalidCredentialsException;
+import com.crm.backend.exception.InvalidPasswordException;
+import com.crm.backend.exception.UserNotFoundException;
 import com.crm.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,7 +26,6 @@ public class UserService {
 
     public User registerUser(RegisterRequest request){
         if(userRepository.findByEmail(request.getEmail()) != null){
-
             throw new EmailAlreadyExistsException("Email already exists");
         }
         User user=new User();
@@ -37,12 +39,30 @@ public class UserService {
     public String loginUser(String email,String password){
         User user=userRepository.findByEmail(email);
         if(user==null){
-            return "User not found";
+            throw new UserNotFoundException("User not found");
         }
         if(!passwordEncoder.matches(password,user.getPassword())){
-            return "Invalid password";
+            throw new InvalidCredentialsException("Invalid password");
         }
         String token = jwtUtil.generateToken(user.getEmail());
         return token;
+    }
+
+    public String changePassword(String email,String oldPassword,String newPassword,String confirmPassword){
+        User user=userRepository.findByEmail(email);
+
+        if(user==null){
+            throw new UserNotFoundException("User not found");
+        }
+        if(!passwordEncoder.matches(oldPassword,user.getPassword())){
+            throw new InvalidPasswordException(("Old password is incorrect"));
+        }
+        if(!newPassword.equals(confirmPassword)){
+            throw new InvalidPasswordException("New password and confirm password do not match");
+        }
+        user.setPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        return "Password changed successfully";
+
     }
 }

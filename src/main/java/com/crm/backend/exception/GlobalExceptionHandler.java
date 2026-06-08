@@ -34,4 +34,25 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(409).body(error);
     }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<Map<String,String>>handleInvalidPassword(InvalidPasswordException ex){
+        Map<String,String>error=new HashMap<>();
+
+        error.put("error",ex.getMessage());
+        return ResponseEntity.badRequest().body(error);
+    }
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String,String >>handleUserNotFound(UserNotFoundException ex){
+        Map<String,String>error=new HashMap<>();
+        error.put("error",ex.getMessage());
+        return ResponseEntity.status(404).body(error);
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ResponseEntity<Map<String,String >> handleInvalidCredentials(InvalidCredentialsException ex){
+        Map<String,String>error=new HashMap<>();
+        error.put("error",ex.getMessage());
+        return ResponseEntity.status(401).body(error);
+    }
 }
