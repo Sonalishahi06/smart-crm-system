@@ -55,4 +55,11 @@ public class GlobalExceptionHandler {
         error.put("error",ex.getMessage());
         return ResponseEntity.status(401).body(error);
     }
+
+    @ExceptionHandler(UnauthorizedLeadCreationException.class)
+    public ResponseEntity<Map<String, String>> handleUnauthorizedLeadCreation(UnauthorizedLeadCreationException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(403).body(error);
+    }
 }
