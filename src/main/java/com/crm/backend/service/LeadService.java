@@ -2,10 +2,10 @@ package com.crm.backend.service;
 
 import com.crm.backend.dto.LeadRequest;
 import com.crm.backend.dto.LeadResponse;
+import com.crm.backend.dto.UpdateLeadStatusRequest;
 import com.crm.backend.entity.Lead;
 import com.crm.backend.entity.User;
-import com.crm.backend.exception.UnauthorizedLeadCreationException;
-import com.crm.backend.exception.UserNotFoundException;
+import com.crm.backend.exception.*;
 import com.crm.backend.repository.LeadRepository;
 import com.crm.backend.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +43,7 @@ public class LeadService {
                                 "Assigned user not found"));
 
         if (!"USER".equals(assignedUser.getRole())) {
-            throw new RuntimeException(
+            throw new InvalidLeadAssignmentException(
                     "Lead can only be assigned to employees");
         }
 
@@ -63,16 +63,7 @@ public class LeadService {
 
         Lead savedLead = leadRepository.save(lead);
 
-        return LeadResponse.builder()
-                .id(savedLead.getId())
-                .name(savedLead.getName())
-                .email(savedLead.getEmail())
-                .phone(savedLead.getPhone())
-                .source(savedLead.getSource())
-                .status(savedLead.getStatus())
-                .assignedTo(savedLead.getAssignedTo())
-                .createdAt(savedLead.getCreatedAt())
-                .build();
+        return mapToResponse(savedLead);
     }
 
     public List<LeadResponse> getLeads(){
@@ -90,8 +81,31 @@ public class LeadService {
                .map(this::mapToResponse)
                .toList();
     }
-    private LeadResponse mapToResponse(Lead lead) {
 
+    public LeadResponse updateLeadStatus(Long leadId, UpdateLeadStatusRequest request){
+        Lead lead=leadRepository.findById(leadId)
+                .orElseThrow(() ->
+                        new LeadNotFoundException(
+                                "Lead not found"));
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        String email = auth.getName();
+
+        User currentUser = userRepository.findByEmail(email);
+        if ("USER".equals(currentUser.getRole())
+                && !lead.getAssignedTo().equals(currentUser.getId())) {
+            throw new UnauthorizedLeadUpdateException(
+                    "You can update only your assigned leads");
+        }
+        lead.setStatus(request.getStatus());
+
+        Lead updatedLead = leadRepository.save(lead);
+
+        return mapToResponse(updatedLead);
+    }
+
+
+    private LeadResponse mapToResponse(Lead lead) {
         return LeadResponse.builder()
                 .id(lead.getId())
                 .name(lead.getName())

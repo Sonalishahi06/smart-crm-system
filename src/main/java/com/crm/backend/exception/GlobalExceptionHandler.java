@@ -62,4 +62,29 @@ public class GlobalExceptionHandler {
         error.put("error", ex.getMessage());
         return ResponseEntity.status(403).body(error);
     }
+
+    @ExceptionHandler(LeadNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleLeadNotFound(LeadNotFoundException ex){
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+        return ResponseEntity.status(404).body(error);
+    }
+
+    @ExceptionHandler(InvalidLeadAssignmentException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidAssignment(InvalidLeadAssignmentException ex) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return ResponseEntity.status(400).body(error);
+    }
+
+    @ExceptionHandler(UnauthorizedLeadUpdateException.class)
+    public ResponseEntity<Map<String, String>> handleUnauthorizedUpdate(UnauthorizedLeadUpdateException ex) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return ResponseEntity.status(403).body(error);
+    }
 }

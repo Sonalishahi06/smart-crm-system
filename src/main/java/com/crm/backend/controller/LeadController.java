@@ -2,13 +2,10 @@ package com.crm.backend.controller;
 
 import com.crm.backend.dto.LeadRequest;
 import com.crm.backend.dto.LeadResponse;
-import com.crm.backend.entity.Lead;
-import com.crm.backend.repository.LeadRepository;
+import com.crm.backend.dto.UpdateLeadStatusRequest;
 import com.crm.backend.service.LeadService;
 import jakarta.validation.Valid;
-import jdk.jfr.Frequency;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,5 +23,13 @@ public class LeadController {
     @GetMapping
     public List<LeadResponse> getLeads(){
         return leadService.getLeads();
+    }
+
+    @PutMapping("/{id}/status")
+    public LeadResponse updateLeadStatus(
+            @PathVariable Long id,
+            @Valid @RequestBody UpdateLeadStatusRequest request) {
+
+        return leadService.updateLeadStatus(id, request);
     }
 }
