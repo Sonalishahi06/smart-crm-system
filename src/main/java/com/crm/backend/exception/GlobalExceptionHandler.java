@@ -87,4 +87,29 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.status(403).body(error);
     }
+
+
+    @ExceptionHandler(InvalidTaskAssignmentException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidTaskAssignment(InvalidTaskAssignmentException ex) {
+
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return ResponseEntity.status(400).body(error);
+    }
+
+    @ExceptionHandler(TaskNotFoundException.class)
+    public ResponseEntity<Map<String,String>> handleTaskNotFound(TaskNotFoundException ex){
+        Map<String,String> error=new HashMap<>();
+        error.put("error",ex.getMessage());
+        return ResponseEntity.status(404).body(error);
+    }
+
+    @ExceptionHandler(UnauthorizedTaskUpdateException.class)
+    public ResponseEntity<Map<String, String>> handleUnauthorizedTaskUpdate(UnauthorizedTaskUpdateException ex) {
+        Map<String, String> error = new HashMap<>();
+        error.put("error", ex.getMessage());
+
+        return ResponseEntity.status(403).body(error);
+    }
 }
