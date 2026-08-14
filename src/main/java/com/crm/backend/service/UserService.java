@@ -63,6 +63,5 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
         return "Password changed successfully";
-
     }
 }
