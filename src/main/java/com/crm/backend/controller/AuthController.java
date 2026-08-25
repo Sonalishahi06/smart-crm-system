@@ -2,6 +2,7 @@ package com.crm.backend.controller;
 
 import com.crm.backend.dto.ChangePasswordRequest;
 import com.crm.backend.dto.LoginRequest;
+import com.crm.backend.dto.LoginResponse;
 import com.crm.backend.dto.RegisterRequest;
 import com.crm.backend.entity.User;
 import com.crm.backend.service.UserService;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/api/auth")
@@ -24,8 +26,11 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String loginUser(@RequestBody LoginRequest request) {
-        return userService.loginUser(request.getEmail(), request.getPassword());
+    public LoginResponse loginUser(@RequestBody LoginRequest request) {
+        return userService.loginUser(
+                request.getEmail(),
+                request.getPassword()
+        );
     }
 
     @PutMapping("/change-password")

@@ -1,6 +1,7 @@
 package com.crm.backend.service;
 
 import com.crm.backend.config.JwtUtil;
+import com.crm.backend.dto.LoginResponse;
 import com.crm.backend.dto.RegisterRequest;
 import com.crm.backend.entity.User;
 import com.crm.backend.exception.EmailAlreadyExistsException;
@@ -36,7 +37,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public String loginUser(String email,String password){
+    public LoginResponse loginUser(String email,String password){
         User user=userRepository.findByEmail(email);
         if(user==null){
             throw new UserNotFoundException("User not found");
@@ -45,7 +46,7 @@ public class UserService {
             throw new InvalidCredentialsException("Invalid password");
         }
         String token = jwtUtil.generateToken(user.getEmail());
-        return token;
+        return new LoginResponse(token,user.getName());
     }
 
     public String changePassword(String email,String oldPassword,String newPassword,String confirmPassword){
