@@ -46,7 +46,7 @@ public class UserService {
             throw new InvalidCredentialsException("Invalid password");
         }
         String token = jwtUtil.generateToken(user.getEmail());
-        return new LoginResponse(token,user.getName());
+        return new LoginResponse(token,user.getName(), user.getRole());
     }
 
     public String changePassword(String email,String oldPassword,String newPassword,String confirmPassword){
