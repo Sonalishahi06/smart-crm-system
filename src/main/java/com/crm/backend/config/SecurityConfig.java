@@ -73,7 +73,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
 
         configuration.setAllowedOrigins(
-                List.of(frontendUrl)
+                List.of("https://smart-crm-tool.netlify.app","http://localhost:5173")
         );
 
         configuration.setAllowedMethods(
