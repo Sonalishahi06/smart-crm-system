@@ -1,201 +1,755 @@
-# 🚀 Smart CRM System
+# ⚡ Smart CRM System
 
-A secure and scalable Customer Relationship Management (CRM) backend application built with Spring Boot, Spring Security, JWT Authentication, Role-Based Authorization, and MySQL.
+### A production-style, role-based Customer Relationship Management platform built with Spring Boot & React.
 
-## 📖 Overview
+<p align="center">
 
-Smart CRM System is a backend application designed to help businesses securely manage customer information through RESTful APIs.
+**Secure • Scalable • Role-Based • Cloud Deployed**
 
-The project implements modern backend development practices including authentication, authorization, request validation, exception handling, and user-specific data access.
-
-It follows a clean layered architecture and simulates real-world CRM functionality where different users have different access levels.
+</p>
 
 ---
 
-## ✨ Key Features
+## 🌐 Live Application
 
-### 🔐 Authentication & Security
+### 🚀 [Launch Smart CRM](https://smart-crm-tool.netlify.app/)
 
-* User Registration
-* User Login
-* BCrypt Password Encryption
-* JWT Token Generation
-* JWT-Based Authentication
+**Frontend:** `https://smart-crm-tool.netlify.app/`
+
+**Backend API:** `https://smart-crm-backend-8rt4.onrender.com/`
+
+**Database:** MySQL — Aiven Cloud
+
+---
+
+## 📸 What is Smart CRM?
+
+Smart CRM is a full-stack web application designed to centralize customer, lead, task, and user management in one secure platform.
+
+Instead of treating authentication, customer management, leads, and tasks as separate modules, the system connects them through a **role-aware backend architecture**.
+
+```text
+                         SMART CRM
+                            │
+             ┌──────────────┼──────────────┐
+             │              │              │
+          Customers        Leads          Tasks
+             │              │              │
+             └──────────────┼──────────────┘
+                            │
+                    Role-Based Access
+                            │
+                   ┌────────┴────────┐
+                   │                 │
+                 USER              ADMIN
+```
+
+---
+
+# ✨ Core Features
+
+### 🔐 Secure Authentication
+
+* User registration
+* Login authentication
+* JWT-based authentication
+* BCrypt password hashing
+* Stateless authentication
 * Protected REST APIs
-
-### 🛡️ Authorization & Access Control
-
-* Role-Based Authorization (ADMIN / USER)
-* Admin Protected Endpoints
-* User-Specific Customer Access
-* Admin Access to All Customers
-* 403 Forbidden for Unauthorized Requests
 
 ### 👥 Customer Management
 
-* Create Customer
-* View Customer Details
-* Update Customer Information
-* Delete Customer
-* Customer Ownership Tracking
+* Create customers
+* Update customer information
+* View customers
+* Search customers
+* Filter customers
+* Paginated customer data
 
-### ✅ Validation & Error Handling
+### 🎯 Lead Management
 
-* Request Validation
-* Global Exception Handling
-* Custom Exception Handling
-* Duplicate Email Prevention
-* Meaningful HTTP Status Codes
+* Manage sales leads
+* Track lead status
+* Role-aware lead operations
 
----
+### ✅ Task Management
 
-## 🛠️ Tech Stack
-
-### Backend
-
-* Java 21
-* Spring Boot
-* Spring Security
-* JWT (JSON Web Token)
-* Spring Data JPA
-* Hibernate
-* Maven
-
-### Database
-
-* MySQL
-
-### Tools & Platforms
-
-* Git & GitHub
-* Postman
-* IntelliJ IDEA
-
----
-
-## 🏗️ Architecture
-
-The project follows a layered architecture:
+* Create and manage tasks
+* Assign tasks to users
+* Track task status
+* Task lifecycle:
 
 ```text
+PENDING → IN_PROGRESS → COMPLETED
+```
+
+### 👑 Administration
+
+* Role-based access control
+* USER / ADMIN roles
+* Admin-only APIs
+* User management
+* Admin customer access
+
+---
+
+# 🧠 Architecture
+
+The backend follows a clean layered architecture to keep responsibilities separated and maintainable.
+
+```text
+                     React.js Frontend
+                            │
+                            │ REST / Axios
+                            ▼
+                 ┌─────────────────────┐
+                 │    Spring Boot API  │
+                 └──────────┬──────────┘
+                            │
+                     Spring Security
+                            │
+                       JWT Filter
+                            │
+                            ▼
+                     ┌────────────┐
+                     │ Controller │
+                     └─────┬──────┘
+                           │
+                           ▼
+                     ┌──────────┐
+                     │ Service  │
+                     └────┬─────┘
+                          │
+                          ▼
+                    ┌────────────┐
+                    │ Repository │
+                    └─────┬──────┘
+                          │
+                          ▼
+                    ┌────────────┐
+                    │   MySQL    │
+                    └────────────┘
+```
+
+### Why this architecture?
+
+Each layer has a clear responsibility:
+
+| Layer      | Responsibility                       |
+| ---------- | ------------------------------------ |
+| Controller | Handles HTTP requests/responses      |
+| Service    | Contains business logic              |
+| Repository | Handles database operations          |
+| Entity     | Represents database models           |
+| Security   | Authentication & authorization       |
+| Frontend   | User interface and API communication |
+
+This separation makes the application easier to maintain, test, and extend.
+
+---
+
+# 🔒 Security Architecture
+
+Security is one of the core parts of the application.
+
+```text
+User Login
+    │
+    ▼
+Credentials
+    │
+    ▼
+Spring Security
+    │
+    ├── Verify User
+    │
+    └── Verify BCrypt Password
+    │
+    ▼
+Generate JWT
+    │
+    ▼
+Frontend
+    │
+    ▼
+Protected API Request
+    │
+    ▼
+JWT Filter
+    │
+    ▼
+Validate Token
+    │
+    ▼
+Identify User + Role
+    │
+    ▼
+Authorization Check
+    │
+    ▼
 Controller
-    ↓
-Service
-    ↓
-Repository
-    ↓
-Database
 ```
 
-### Project Structure
+### 🔑 Authentication vs Authorization
 
-```text
-src/main/java
-│
-├── controller
-├── service
-├── repository
-├── dto
-├── entity
-├── config
-├── exception
-└── security
-```
+The application separates these two concepts:
+
+**Authentication**
+
+> "Who are you?"
+
+Handled using login + JWT.
+
+**Authorization**
+
+> "What are you allowed to access?"
+
+Handled using Spring Security roles.
 
 ---
 
-## 🔄 API Workflow
+# 👑 Role-Based Access Control
 
-### Authentication Flow
-
-```text
-Register User
-      ↓
-Login User
-      ↓
-Generate JWT Token
-      ↓
-Access Protected APIs
-```
-
-### Authorization Flow
+The application currently supports:
 
 ```text
 USER
- └── Manage Own Customers
-
 ADMIN
- ├── Manage Own Customers
- ├── View All Customers
- └── Access Admin APIs
+```
+
+### USER
+
+Regular users can access standard CRM functionality.
+
+### ADMIN
+
+Administrators have additional access to protected administrative operations.
+
+```text
+                   AUTHENTICATED USER
+                          │
+                 ┌────────┴────────┐
+                 │                 │
+                USER             ADMIN
+                 │                 │
+          CRM Operations     CRM Operations
+                              +
+                         Admin Operations
+```
+
+New registrations receive the normal `USER` role by default.
+
+This prevents users from simply registering themselves as administrators.
+
+---
+
+# 🔐 Password Protection
+
+Passwords are never intentionally stored as plain text.
+
+The application uses:
+
+```text
+BCryptPasswordEncoder
+```
+
+Password lifecycle:
+
+```text
+Plain Password
+      │
+      ▼
+ BCrypt Hashing
+      │
+      ▼
+Password Hash
+      │
+      ▼
+    MySQL
+```
+
+During authentication, the entered password is verified against the stored BCrypt hash.
+
+---
+
+# 📡 REST API Design
+
+The application exposes RESTful endpoints for different CRM modules.
+
+## Authentication
+
+```http
+POST /api/auth/register
+POST /api/auth/login
+PUT  /api/auth/change-password
+```
+
+## Customers
+
+```http
+POST /api/customers
+GET  /api/customers
+GET  /api/customers/search
+GET  /api/customers/filter
+PUT  /api/customers/{id}
+```
+
+## Administration
+
+```http
+GET /api/admin/users
+GET /api/admin/customers
+```
+
+The APIs are protected according to authentication and role requirements.
+
+---
+
+# 📄 Pagination
+
+Customer listing supports pagination.
+
+Example:
+
+```http
+GET /api/customers?page=0&size=10
+```
+
+Instead of retrieving the complete customer table, the API can return a limited page of records.
+
+This helps reduce:
+
+* Response size
+* Database load
+* Frontend rendering work
+
+---
+
+# 🔎 Search & Filtering
+
+The customer module supports dedicated search and filtering operations.
+
+This allows users to quickly locate relevant CRM records without manually browsing the complete customer list.
+
+---
+
+# 🗃️ Data Model
+
+Core domain entities include:
+
+```text
+┌──────────┐
+│   User   │
+└────┬─────┘
+     │
+     ├──────────────┐
+     │              │
+     ▼              ▼
+ Customer         Task
+     │
+     ▼
+   Lead
+```
+
+### User
+
+Responsible for:
+
+* Authentication
+* User identity
+* Role
+* Access control
+
+### Customer
+
+Stores customer-related information.
+
+### Lead
+
+Represents potential customer/sales information.
+
+### Task
+
+Represents work assigned to users.
+
+Example task states:
+
+```text
+PENDING
+IN_PROGRESS
+COMPLETED
 ```
 
 ---
 
-## ▶️ Getting Started
+# ⚙️ Technology Stack
 
-### 1. Clone the Repository
+## Backend
 
-```bash
-git clone https://github.com/Sonalishahi06/smart-crm-system.git
-cd smart-crm-system
-```
+| Technology      | Purpose                        |
+| --------------- | ------------------------------ |
+| Java 21         | Core programming language      |
+| Spring Boot     | Backend framework              |
+| Spring Security | Authentication & authorization |
+| JWT             | Stateless authentication       |
+| BCrypt          | Password hashing               |
+| Spring Data JPA | Data access                    |
+| Hibernate       | ORM                            |
+| Maven           | Build & dependency management  |
 
-### 2. Configure Database
+## Frontend
 
-Update `application.properties`:
+| Technology   | Purpose           |
+| ------------ | ----------------- |
+| React.js     | UI                |
+| Vite         | Frontend tooling  |
+| JavaScript   | Application logic |
+| Tailwind CSS | Styling           |
+| Axios        | API communication |
 
-```properties
-spring.datasource.url=jdbc:mysql://localhost:3306/crm_db
-spring.datasource.username=your_username
-spring.datasource.password=your_password
-```
+## Infrastructure
 
-### 3. Run the Application
-
-```bash
-mvn spring-boot:run
-```
-
-### 4. Test APIs
-
-Use Postman to test:
-
-* Authentication APIs
-* Customer APIs
-* Admin APIs
-* Authorization Rules
+| Technology | Purpose                        |
+| ---------- | ------------------------------ |
+| MySQL      | Relational database            |
+| Aiven      | Cloud database hosting         |
+| Render     | Backend deployment             |
+| Netlify    | Frontend deployment            |
+| Docker     | Backend containerization       |
+| GitHub     | Source control & CI/CD trigger |
 
 ---
 
-## 🚀 Upcoming Enhancements
+# 🔄 Production Deployment
 
+The application is deployed using a cloud-based architecture.
+
+```text
+                 GitHub
+                   │
+          ┌────────┴────────┐
+          │                 │
+          ▼                 ▼
+       Netlify            Render
+          │                 │
+          ▼                 ▼
+      React.js          Spring Boot
+                            │
+                            │
+                            ▼
+                       Aiven MySQL
+```
+
+### Frontend
+
+Hosted on **Netlify**
+
+```text
+https://smart-crm-tool.netlify.app/
+```
+
+### Backend
+
+Hosted on **Render**
+
+```text
+https://smart-crm-backend-8rt4.onrender.com/
+```
+
+### Database
+
+Hosted on **Aiven Cloud**
+
+---
+
+# 🐳 Dockerized Backend
+
+The Spring Boot backend includes a `Dockerfile`.
+
+Render builds the application from the repository and uses the Docker configuration during deployment.
+
+```text
+Git Push
+   │
+   ▼
+GitHub
+   │
+   ▼
+Render
+   │
+   ▼
+Docker Build
+   │
+   ▼
+Spring Boot Container
+   │
+   ▼
+Production API
+```
+
+---
+
+# 🔁 Automatic Deployment
+
+The backend repository is connected directly to Render.
+
+Whenever updated backend code is pushed to GitHub:
+
+```text
+Code Change
+     ↓
+git push
+     ↓
+GitHub
+     ↓
+Render detects change
+     ↓
+Docker build
+     ↓
+Application deployment
+     ↓
+Updated API
+```
+
+This removes the need to manually create and deploy a Docker image for every backend change.
+
+---
+
+# 🌍 Environment Configuration
+
+Production configuration uses environment variables rather than hardcoding sensitive credentials.
+
+### Backend
+
+```text
+DB_URL
+DB_USERNAME
+DB_PASSWORD
+FRONTEND_URL
+```
+
+### Frontend
+
+```text
+VITE_API_URL
+```
+
+Production frontend communicates with:
+
+```text
+https://smart-crm-backend-8rt4.onrender.com/api
+```
+
+Sensitive credentials are intentionally excluded from source control.
+
+---
+
+# 🌐 CORS & Frontend Communication
+
+The React frontend communicates with the Spring Boot backend using Axios.
+
+```text
+React
+  │
+  │ Axios
+  ▼
+Spring Boot API
+  │
+  │ CORS validation
+  ▼
+Spring Security
+  │
+  ▼
+Application
+```
+
+The production frontend origin is configured through environment-based configuration.
+
+---
+
+# 🧪 API Testing
+
+The REST APIs can be tested using Postman.
+
+Typical protected request:
+
+```http
+Authorization: Bearer <JWT_TOKEN>
+```
+
+Example flow:
+
+```text
+Register
+   ↓
+Login
+   ↓
+Receive JWT
+   ↓
+Attach JWT
+   ↓
+Access Protected API
+```
+
+---
+
+# 📁 Project Structure
+
+```text
+smart-crm-system/
+│
+├── src/
+│   ├── main/
+│   │   ├── java/
+│   │   │   └── com/crm/backend/
+│   │   │
+│   │   └── resources/
+│   │       └── application.properties
+│   │
+│   └── test/
+│
+├── Dockerfile
+├── pom.xml
+├── .gitignore
+└── README.md
+```
+
+---
+
+# ⚡ API Request Lifecycle
+
+A typical authenticated request flows through the application like this:
+
+```text
+React UI
+   ↓
+Axios
+   ↓
+Authorization: Bearer JWT
+   ↓
+JWT Filter
+   ↓
+Token Validation
+   ↓
+Spring Security
+   ↓
+Role Check
+   ↓
+Controller
+   ↓
+Service
+   ↓
+Repository
+   ↓
+Hibernate / JPA
+   ↓
+MySQL
+   ↓
+Response
+   ↓
+React UI
+```
+
+---
+
+# 📈 Performance & Scalability Considerations
+
+The application already uses patterns that make future scaling easier:
+
+* Layered backend architecture
 * Pagination
-* Search & Filter APIs
-* Swagger / OpenAPI Documentation
-* React Frontend
-* Customer Analytics Dashboard
-* Docker Containerization
-* AWS Deployment
+* Database-backed persistence
+* Stateless JWT authentication
+* REST API architecture
+* Environment-based configuration
+* Dockerized backend
+
+Potential future additions can include caching, asynchronous processing, monitoring, and distributed services as the system grows.
 
 ---
 
+# 🚀 Future Roadmap
 
-Focused on:
+The architecture can be extended with features such as:
 
-* Spring Boot
-* Spring Security
-* REST APIs
-* JWT Authentication
-* Database Design
-* Backend System Development
-
-
-
+* 🔔 Follow-up reminders
+* 📧 Automated email notifications
+* 📊 Advanced CRM analytics
+* 🕒 Activity timeline
+* 📁 Document management
+* ⚡ Redis caching
+* 📨 Kafka-based event processing
+* ☁️ Advanced cloud infrastructure
+* 📈 Monitoring & observability
+* 🔐 More granular permissions
 
 ---
 
-⭐ If you found this project useful, consider giving it a star.
+# 💡 Why Smart CRM?
+
+The project combines several real-world backend concepts into one application:
+
+```text
+Authentication
+      +
+Authorization
+      +
+REST APIs
+      +
+Database Management
+      +
+Frontend Integration
+      +
+Cloud Deployment
+      +
+Docker
+      +
+CI/CD
+```
+
+The result is a complete full-stack system rather than an isolated CRUD application.
+
+---
+
+# 👩‍💻 Built By
+
+## Sonali Kumari Shahi
+
+**Java | Spring Boot | React.js | MySQL**
+
+GitHub: `Sonalishahi06`
+
+---
+
+## ⭐ Project Snapshot
+
+```text
+┌─────────────────────────────────────────────┐
+│              SMART CRM SYSTEM               │
+├─────────────────────────────────────────────┤
+│                                             │
+│  ⚡ Spring Boot Backend                     │
+│  ⚛️ React Frontend                          │
+│  🔐 JWT Authentication                      │
+│  🛡️ Role-Based Authorization                │
+│  🔑 BCrypt Password Hashing                 │
+│  👥 Customer Management                     │
+│  🎯 Lead Management                         │
+│  ✅ Task Management                         │
+│  🔎 Search & Filtering                      │
+│  📄 Pagination                              │
+│  🗄️ MySQL + Aiven                           │
+│  🐳 Docker                                  │
+│  ☁️ Render + Netlify                        │
+│  🔄 GitHub Automatic Deployment             │
+│                                             │
+└─────────────────────────────────────────────┘
+```
+
+### 🔗 Live Demo
+
+**https://smart-crm-tool.netlify.app/**
+
 
 
 
